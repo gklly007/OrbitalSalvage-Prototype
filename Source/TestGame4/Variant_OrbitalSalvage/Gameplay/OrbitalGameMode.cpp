@@ -12,6 +12,12 @@
 #include "Components/StaticMeshComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
+#include "Engine/DirectionalLight.h"
+#include "Engine/SkyLight.h"
+#include "Engine/StaticMeshActor.h"
+#include "EngineUtils.h"
+#include "Components/LightComponent.h"
+#include "Components/SkyLightComponent.h"
 
 AOrbitalGameMode::AOrbitalGameMode()
 {
@@ -28,6 +34,7 @@ void AOrbitalGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
+	EnsureRuntimeEnvironment();
 	SectorManager = GetWorld()->SpawnActor<AOrbitalSectorManager>(AOrbitalSectorManager::StaticClass(), FVector::ZeroVector, FRotator::ZeroRotator);
 	LoadCurrentSectorAndPlaceShip(true);
 	bPendingShipPlacement = (GetPlayerShip() == nullptr);
@@ -213,4 +220,66 @@ void AOrbitalGameMode::LoadCurrentSectorAndPlaceShip(bool bForceResetVelocity)
 			Ship->ShipMesh->SetPhysicsAngularVelocityInRadians(FVector::ZeroVector);
 		}
 	}
+}
+
+void AOrbitalGameMode::EnsureRuntimeEnvironment()
+{
+	if (bSpawnedRuntimeEnvironment || !GetWorld())
+	{
+		return;
+	}
+
+	bool bHasDirectionalLight = false;
+	bool bHasSkyLight = false;
+
+	for (TActorIterator<ADirectionalLight> It(GetWorld()); It; ++It)
+	{
+		bHasDirectionalLight = true;
+		break;
+	}
+
+	for (TActorIterator<ASkyLight> It(GetWorld()); It; ++It)
+	{
+		bHasSkyLight = true;
+		break;
+	}
+
+	if (!bHasDirectionalLight)
+	{
+		ADirectionalLight* Sun = GetWorld()->SpawnActor<ADirectionalLight>(ADirectionalLight::StaticClass(), FVector(0.0f, 0.0f, 2200.0f), FRotator(-50.0f, 35.0f, 0.0f));
+		if (Sun && Sun->GetLightComponent())
+		{
+			Sun->GetLightComponent()->Intensity = 9.0f;
+		}
+	}
+
+	if (!bHasSkyLight)
+	{
+		ASkyLight* Sky = GetWorld()->SpawnActor<ASkyLight>(ASkyLight::StaticClass(), FVector(0.0f, 0.0f, 1600.0f), FRotator::ZeroRotator);
+		if (Sky && Sky->GetLightComponent())
+		{
+			Sky->GetLightComponent()->Intensity = 0.8f;
+		}
+	}
+
+	// Spawn a simple large floor plane for cursor traces and visual grounding.
+	const FVector FloorLocation(0.0f, 0.0f, 0.0f);
+	AStaticMeshActor* Floor = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), FloorLocation, FRotator::ZeroRotator);
+	if (Floor)
+	{
+		UStaticMeshComponent* MeshComp = Floor->GetStaticMeshComponent();
+		if (MeshComp)
+		{
+			UStaticMesh* PlaneMesh = LoadObject<UStaticMesh>(nullptr, TEXT("/Engine/BasicShapes/Plane.Plane"));
+			if (PlaneMesh)
+			{
+				MeshComp->SetStaticMesh(PlaneMesh);
+				MeshComp->SetWorldScale3D(FVector(140.0f, 140.0f, 1.0f));
+				MeshComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+				MeshComp->SetCollisionResponseToAllChannels(ECR_Block);
+			}
+		}
+	}
+
+	bSpawnedRuntimeEnvironment = true;
 }

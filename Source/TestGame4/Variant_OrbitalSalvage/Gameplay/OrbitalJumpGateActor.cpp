@@ -16,20 +16,12 @@ AOrbitalJumpGateActor::AOrbitalJumpGateActor()
 	MeshComponent->SetCollisionProfileName(TEXT("BlockAllDynamic"));
 	MeshComponent->SetSimulatePhysics(false);
 
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> TorusMesh(TEXT("/Engine/BasicShapes/Torus.Torus"));
-	if (TorusMesh.Succeeded())
+	// Use always-present basic shapes to avoid content path differences between engine versions.
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
+	if (SphereMesh.Succeeded())
 	{
-		MeshComponent->SetStaticMesh(TorusMesh.Object);
-		MeshComponent->SetRelativeScale3D(FVector(6.0f, 6.0f, 6.0f));
-	}
-	else
-	{
-		static ConstructorHelpers::FObjectFinder<UStaticMesh> SphereMesh(TEXT("/Engine/BasicShapes/Sphere.Sphere"));
-		if (SphereMesh.Succeeded())
-		{
-			MeshComponent->SetStaticMesh(SphereMesh.Object);
-			MeshComponent->SetRelativeScale3D(FVector(5.5f, 5.5f, 5.5f));
-		}
+		MeshComponent->SetStaticMesh(SphereMesh.Object);
+		MeshComponent->SetRelativeScale3D(FVector(5.5f, 5.5f, 5.5f));
 	}
 }
 
@@ -42,4 +34,3 @@ bool AOrbitalJumpGateActor::CanShipUseGate(const AOrbitalShipPawn* Ship) const
 
 	return FVector::DistSquared2D(Ship->GetActorLocation(), GetActorLocation()) <= FMath::Square(ActivationRange);
 }
-

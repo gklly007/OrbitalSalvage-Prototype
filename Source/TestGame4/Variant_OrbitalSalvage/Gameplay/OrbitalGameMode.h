@@ -61,8 +61,10 @@ public:
 private:
 	float StatusMessageTimer = 0.0f;
 	bool bPendingShipPlacement = false;
+	bool bSpawnedRuntimeEnvironment = false;
 
 	void SetStatusMessage(const FString& Message, float DurationSeconds = 3.0f);
 	AOrbitalShipPawn* GetPlayerShip() const;
 	void LoadCurrentSectorAndPlaceShip(bool bForceResetVelocity);
+	void EnsureRuntimeEnvironment();
 };
