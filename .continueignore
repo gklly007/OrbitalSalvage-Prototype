@@ -1,0 +1,10 @@
+# Continue indexing exclusions (keep useful text/code, skip heavy/generated content)
+Binaries/
+Intermediate/
+DerivedDataCache/
+Saved/
+Engine/
+Content/
+.git/
+.vs/
+.vscode/

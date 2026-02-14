@@ -1,0 +1,29 @@
+# Unreal Engine generated files
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+.vs/
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+
+# Build files
+Build/
+
+# IDE
+.idea/
+.vscode/
+.continue/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Compiled assets (keep .uasset and .umap in source control)
+# *.uasset
+# *.umap
+nul

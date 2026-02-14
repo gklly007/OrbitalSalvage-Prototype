@@ -1,8 +1,8 @@
-# Orbital Salvage Prototype
+# OrbitalSalvage-Prototype
 
-This repository contains the initial design plan and UE5 research brief for a fast vertical slice inspired by Delta V: Rings of Saturn and Starcom: Unknown Space.
+Standalone UE project repository copied from `TestGame4` for orbital-salvage prototyping.
 
-## Files
+## Notes
 
-- OrbitalSalvage_TestCandidate_Plan.md
-- UE5_OrbitalSalvage_Research.md
+- Generated/cache folders are intentionally excluded: `Binaries`, `DerivedDataCache`, `Intermediate`, `Saved`.
+- Source project structure and content are preserved.
