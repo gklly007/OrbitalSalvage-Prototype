@@ -37,7 +37,11 @@ public class TestGame4 : ModuleRules
 			"TestGame4/Variant_SpaceStation/Gameplay",
 			"TestGame4/Variant_SpaceStation/AI",
 			"TestGame4/Variant_SpaceStation/Components",
-			"TestGame4/Variant_SpaceStation/UI"
+			"TestGame4/Variant_SpaceStation/UI",
+			"TestGame4/Variant_OrbitalSalvage",
+			"TestGame4/Variant_OrbitalSalvage/Gameplay",
+			"TestGame4/Variant_OrbitalSalvage/Components",
+			"TestGame4/Variant_OrbitalSalvage/UI"
 		});
 
 		// Uncomment if you are using Slate UI
